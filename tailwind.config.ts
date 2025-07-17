@@ -61,7 +61,27 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				workflow: {
+					orange: 'hsl(var(--workflow-orange))',
+					'orange-light': 'hsl(var(--workflow-orange-light))',
+					teal: 'hsl(var(--workflow-teal))',
+					'teal-light': 'hsl(var(--workflow-teal-light))',
+					gray: 'hsl(var(--workflow-gray))',
+					line: 'hsl(var(--workflow-line))'
 				}
+			},
+			backgroundImage: {
+				'gradient-primary': 'var(--gradient-primary)',
+				'gradient-card': 'var(--gradient-card)'
+			},
+			boxShadow: {
+				'card': 'var(--shadow-card)',
+				'icon': 'var(--shadow-icon)'
+			},
+			transitionTimingFunction: {
+				'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
+				'bounce': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,11 +104,54 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'timeline-grow': {
+					from: {
+						height: '0%'
+					},
+					to: {
+						height: '100%'
+					}
+				},
+				'fade-in-up': {
+					from: {
+						opacity: '0',
+						transform: 'translateY(30px)'
+					},
+					to: {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
+				'icon-bounce': {
+					'0%': {
+						transform: 'scale(0) rotate(0deg)'
+					},
+					'50%': {
+						transform: 'scale(1.1) rotate(180deg)'
+					},
+					'100%': {
+						transform: 'scale(1) rotate(360deg)'
+					}
+				},
+				'pulse-glow': {
+					'0%, 100%': {
+						opacity: '1',
+						transform: 'scale(1)'
+					},
+					'50%': {
+						opacity: '0.8',
+						transform: 'scale(1.05)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'timeline-grow': 'timeline-grow 0.8s ease-out forwards',
+				'fade-in-up': 'fade-in-up 0.6s ease-out forwards',
+				'icon-bounce': 'icon-bounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards',
+				'pulse-glow': 'pulse-glow 2s ease-in-out infinite'
 			}
 		}
 	},
