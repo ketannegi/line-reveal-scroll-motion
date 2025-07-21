@@ -14,8 +14,8 @@ const WhyEnrzySection = () => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: 'top 70%',
-          toggleActions: 'play none none reverse',
+          start: 'top 45%',
+            toggleActions: "play reset play reverse",
         },
       });
 
@@ -47,11 +47,11 @@ const WhyEnrzySection = () => {
 
       // Cards animation
       tl.from('.why-card', {
-        y: 60,
+        y:  200,
         x: -30,
         opacity: 0,
-        stagger: 0.2,
-        duration: 0.6,
+        stagger: .5,
+        duration: 1,
         ease: 'power3.out',
       }, '-=0.2');
     }, sectionRef);
@@ -87,13 +87,13 @@ const WhyEnrzySection = () => {
   ];
 
   return (
-    <div ref={sectionRef} className="bg-background py-16 px-6 overflow-hidden">
-      <div className="max-w-7xl mx-auto">
+    <div ref={sectionRef} className="bg-background section-padding px-6 overflow-hidden ">
+      <div className="max-w-6xl  mx-auto">
         {/* Section Header */}
         <div className="mb-12">
           <div className="relative">
             
-            <h2 className="why-title text-3xl md:text-4xl font-bold text-foreground relative z-10">
+            <h2 className="why-title text-start text-3xl md:text-4xl font-bold text-foreground relative z-10">
               Why ENRZY?
             </h2>
             
@@ -101,15 +101,8 @@ const WhyEnrzySection = () => {
         </div>
 
         {/* Image/Video Placeholder */}
-        <div className="why-image relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl h-64 md:h-96 mb-16 flex items-center justify-center shadow-lg">
-          {/* <div className="text-center">
-               <img
-            src="/assets/why-enrzy.webp"
-            alt="Descriptive alt text for your section image"
-            className="w-full h-full object-cover object-center"
-          />
-            <p className="text-gray-500 text-sm">Video/Image Content</p>
-          </div> */}
+        <div className="why-image relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl h-64 md:h-96  flex items-center justify-center shadow-lg">
+         
              <img
             src="/assets/why-enrzy.webp"
             alt="Descriptive alt text for your section image"
@@ -126,20 +119,19 @@ const WhyEnrzySection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, index) => (
             <div key={index} className="why-card group text-center cursor-pointer">
-              <div className="relative p-6 rounded-xl bg-white shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
+              <div className="relative  transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
                 <div className={`w-12 h-12 ${feature.color} rounded-full flex  justify-center  mb-4 text-white text-xl transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-12`}>
                  
-                
                   <img
                   src={feature.icon}                
                 alt="ENRZY Logo"
                 className=" object-contain"
               />
                 </div>
-                <h3 className="text-lg text-start font-semibold mb-3 text-foreground group-hover:text-[hsl(var(--workflow-orange))] transition-colors duration-300">
+                <h3 className="section-heading text-start font-semibold mb-3 text-foreground group-hover:text-[hsl(var(--workflow-orange))] transition-colors duration-300">
                   {feature.title}
                 </h3>
-                <p className="text-sm text-muted-foreground text-start leading-relaxed">
+                <p className="font-medium text-muted-foreground text-start leading-relaxed">
                   {feature.description}
                 </p>
               </div>

@@ -55,7 +55,8 @@ export default function IndustriesSection() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.set(cardsRef.current, {
-        y: 80,
+        y: 200,
+        x: 0,
         opacity: 0
       });
 
@@ -72,9 +73,9 @@ export default function IndustriesSection() {
       tl.to(cardsRef.current, {
         y: 0,
         opacity: 1,
-        duration: 1,
-        stagger: 0.15,
-        ease: "expo.out"
+        duration: .5,
+        stagger: 0.2,
+         ease: 'power3.out',
       });
 
     }, sectionRef);
@@ -83,20 +84,20 @@ export default function IndustriesSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-20  min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-16">
+    <section ref={sectionRef} className="section-padding min-h-screen bg-gray-50">
+      <div className="max-w-6xl mx-auto px-4"> 
+        <div className="text-center mb-20 ">
            <div className="header-element inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-orange-100 text-orange-600 mb-4">
             <CheckCircle className="w-4 h-4 mr-2" />
             How we work
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+          <h2 className="text-4xl md:text-4xl font-semibold text-gray-800 mb-4">
             Built For Diverse Industries
           </h2>
           
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
           {industries.map((industry, index) => (
             <div
               key={industry.id}
