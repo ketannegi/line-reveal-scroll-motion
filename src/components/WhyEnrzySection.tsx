@@ -1,108 +1,156 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import '../App.css';
+
+
+gsap.registerPlugin(ScrollTrigger);
 
 const WhyEnrzySection = () => {
-  const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      {
-        threshold: 0.3,
-      }
-    );
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 70%',
+          toggleActions: 'play none none reverse',
+        },
+      });
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
+      // Title animation
+      tl.from('.why-title', {
+        y: 50,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power3.out',
+      });
 
-    return () => observer.disconnect();
+      // Underline animation
+      tl.from('.why-underline', {
+        width: 0,
+        opacity: 0,
+        duration: 0.4,
+        ease: 'power2.out',
+      }, '-=0.3');
+
+      // Image animation
+      tl.from('.why-image', {
+        y: 80,
+        scale: 0.95,
+        opacity: 0,
+        rotate: 5,
+        duration: 0.8,
+        ease: 'power3.out',
+      }, '-=0.2');
+
+      // Cards animation
+      tl.from('.why-card', {
+        y: 60,
+        x: -30,
+        opacity: 0,
+        stagger: 0.2,
+        duration: 0.6,
+        ease: 'power3.out',
+      }, '-=0.2');
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
   const features = [
     {
-      icon: "🤖",
-      title: "Smart automation",
-      description: "Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum has been the industry's standard.",
+      icon: "./assets/automate.svg",
+      title: "Advanced AI Detection",
+      description: "Identify defects like corrosion, cracks, and vegetation encroachment with unparalleled accuracy.",
       color: "bg-[hsl(var(--workflow-orange))]"
     },
     {
-      icon: "📊",
-      title: "Predictive analytics",
-      description: "Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum has been the industry's standard.",
-      color: "bg-purple-500"
+      icon: "./assets/predictive.svg",
+      title: "Integrated Workflows",
+      description: "Convert detected faults into actionable tasks, ensuring streamlined repairs.",
+      color: "bg-[hsl(var(--workflow-orange))]"
     },
     {
-      icon: "📈",
-      title: "Predictive analytics",
-      description: "Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum has been the industry's standard.",
-      color: "bg-purple-400"
+      icon: "./assets/predictive.svg",
+      title: "Comprehensive Data Fusion",
+      description: "Combine visual, thermal, and LiDAR data for a holistic view of assets.",
+      color: "bg-[hsl(var(--workflow-orange))]"
     },
     {
-      icon: "🧠",
-      title: "Adaptive learning",
-      description: "Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum has been the industry's standard.",
-      color: "bg-green-500"
+      icon: "./assets/adaptive.svg",
+      title: "Digital Twins",
+      description: "Create photorealistic 3D models for remote inspections and better decision-making.",
+      color: "bg-[hsl(var(--workflow-orange))]"
     },
   ];
 
   return (
-    <div ref={sectionRef} className="bg-background py-16 px-6">
+    <div ref={sectionRef} className="bg-background py-16 px-6 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div
-          className={`mb-12 transform transition-all duration-700 ${
-            isVisible
-              ? 'translate-y-0 opacity-100'
-              : 'translate-y-8 opacity-0'
-          }`}
-          style={{ transitionDelay: '200ms' }}
-        >
-          <p className="text-sm text-muted-foreground mb-2">Are You</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground">Why ENRZY?</h2>
+        <div className="mb-12">
+          <div className="relative">
+            
+            <h2 className="why-title text-3xl md:text-4xl font-bold text-foreground relative z-10">
+              Why ENRZY?
+            </h2>
+            
+          </div>
         </div>
 
-        {/* Video/Image Placeholder */}
-        <div
-          className={`relative bg-gray-200 rounded-2xl h-64 md:h-96 mb-16 flex items-center justify-center transform transition-all duration-700 ${
-            isVisible
-              ? 'translate-y-0 opacity-100 scale-100'
-              : 'translate-y-8 opacity-0 scale-95'
-          }`}
-          style={{ transitionDelay: '400ms' }}
-        >
-          <div className="w-16 h-16 bg-[hsl(var(--workflow-teal))] rounded-full flex items-center justify-center">
-            <span className="text-white text-2xl font-bold">S</span>
-          </div>
+        {/* Image/Video Placeholder */}
+        <div className="why-image relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl h-64 md:h-96 mb-16 flex items-center justify-center shadow-lg">
+          {/* <div className="text-center">
+               <img
+            src="/assets/why-enrzy.webp"
+            alt="Descriptive alt text for your section image"
+            className="w-full h-full object-cover object-center"
+          />
+            <p className="text-gray-500 text-sm">Video/Image Content</p>
+          </div> */}
+             <img
+            src="/assets/why-enrzy.webp"
+            alt="Descriptive alt text for your section image"
+            className="w-full h-full object-cover rounded-md object-center"
+          />
+         
+          <div 
+            className="absolute inset-0 rounded-2xl border-2 border-transparent "
+            style={{ backgroundClip: 'padding-box', transitionDelay: '200ms' }}
+          />
         </div>
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, index) => (
-            <div
-              key={index}
-              className={`text-center transform transition-all duration-700 ${
-                isVisible
-                  ? 'translate-y-0 opacity-100'
-                  : 'translate-y-8 opacity-0'
-              }`}
-              style={{
-                transitionDelay: `${600 + index * 200}ms`,
-              }}
-            >
-              <div className={`w-12 h-12 ${feature.color} rounded-full flex items-center justify-center mx-auto mb-4 text-white text-xl`}>
-                {feature.icon}
+            <div key={index} className="why-card group text-center cursor-pointer">
+              <div className="relative p-6 rounded-xl bg-white shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
+                <div className={`w-12 h-12 ${feature.color} rounded-full flex  justify-center  mb-4 text-white text-xl transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-12`}>
+                 
+                
+                  <img
+                  src={feature.icon}                
+                alt="ENRZY Logo"
+                className=" object-contain"
+              />
+                </div>
+                <h3 className="text-lg text-start font-semibold mb-3 text-foreground group-hover:text-[hsl(var(--workflow-orange))] transition-colors duration-300">
+                  {feature.title}
+                </h3>
+                <p className="text-sm text-muted-foreground text-start leading-relaxed">
+                  {feature.description}
+                </p>
               </div>
-              <h3 className="text-lg font-semibold mb-3 text-foreground">{feature.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {feature.description}
-              </p>
             </div>
           ))}
+        </div>
+
+        {/* Floating Background Elements */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-[hsl(var(--workflow-orange))]/10 to-purple-500/10 rounded-full blur-xl opacity-20 scale-100" />
+          <div className="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-br from-purple-500/10 to-green-500/10 rounded-full blur-xl opacity-20 scale-100" />
         </div>
       </div>
     </div>
@@ -110,3 +158,5 @@ const WhyEnrzySection = () => {
 };
 
 export default WhyEnrzySection;
+
+

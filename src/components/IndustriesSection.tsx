@@ -1,148 +1,133 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { CheckCircle, Bot, Shield, Lightbulb, BarChart3, Settings } from 'lucide-react';
+import '../App.css';
+
+
+gsap.registerPlugin(ScrollTrigger);
 
 const industries = [
   {
     id: 1,
-    name: "Technology Solutions",
-    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
-    delay: 0
+    name: "Power Generation",
+    image: "./assets/1.jpg",
+    description: "RTK-enabled drones, conduct visual, run AI-based images, generate GIS maps, thermal reports."
   },
   {
     id: 2,
-    name: "Infrastructure Services",
-    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2672&q=80",
-    delay: 200
+    name: "Power Transmission", 
+    image: "./assets/2.jpg",
+    description: "Drone depolyment, generate digital inspection dashboards and audit-ready reports."
   },
   {
     id: 3,
-    name: "Energy & Utilities",
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
-    delay: 400
+    name: "Power Distribution",
+    image: "./assets/3.jpg", 
+    description: "Plan and execute drone flights, AI-powered defect identification and thermal grading."
   },
   {
     id: 4,
-    name: "Manufacturing",
-    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
-    delay: 600
+    name: "Mobility",
+    image: "./assets/4.jpg",
+    description: "Define safe flight corridors, capture multi-sensor data, condition reports with geo-tagged defect data."
+  },
+  {
+    id: 5,
+    name: "Urban Development",
+    image: "./assets/4.jpg",
+    description: "Conduct drone surveys,overlay land recoreds, detect temporal changes, build thematic maps."
   }
+  ,
+  {
+    id: 6,
+    name: "Water Resources",
+    image: "./assets/4.jpg",
+    description: "High-resolution drone survey of water infrastructure, create 3D terrain and flow models."
+  }
+  
 ];
 
 export default function IndustriesSection() {
-  const [visibleCards, setVisibleCards] = useState<number[]>([]);
   const sectionRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const cardId = parseInt(entry.target.getAttribute('data-card-id') || '0');
-            
-            // Add cards with staggered timing
-            setTimeout(() => {
-              setVisibleCards(prev => [...new Set([...prev, cardId])]);
-            }, industries.find(i => i.id === cardId)?.delay || 0);
-          }
-        });
-      },
-      { 
-        threshold: 0.2,
-        rootMargin: '-50px 0px -50px 0px'
-      }
-    );
+    const ctx = gsap.context(() => {
+      gsap.set(cardsRef.current, {
+        y: 80,
+        opacity: 0
+      });
 
-    cardRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 80%",
+          end: "bottom 20%",
+          toggleActions: "play reset play reset",
+          markers: false
+        }
+      });
 
-    return () => observer.disconnect();
+      tl.to(cardsRef.current, {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        stagger: 0.15,
+        ease: "expo.out"
+      });
+
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-20 bg-background">
+    <section ref={sectionRef} className="py-20  min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4">
-        {/* Header */}
         <div className="text-center mb-16">
-          <p className="text-workflow-gray text-sm uppercase tracking-wider mb-2">
-            What we Do?
-          </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground">
+           <div className="header-element inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-orange-100 text-orange-600 mb-4">
+            <CheckCircle className="w-4 h-4 mr-2" />
+            How we work
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
             Built For Diverse Industries
           </h2>
+          
         </div>
 
-        {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {industries.map((industry, index) => {
-            const isVisible = visibleCards.includes(industry.id);
-            
-            return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {industries.map((industry, index) => (
+            <div
+              key={industry.id}
+              ref={el => cardsRef.current[index] = el}
+              className="relative h-80 rounded-2xl industries-section-card overflow-hidden cursor-pointer group shadow-lg hover:shadow-2xl transition-all duration-500"
+            >
+              {/* Background Image */}
               <div
-                key={industry.id}
-                ref={(el) => cardRefs.current[index] = el}
-                data-card-id={industry.id}
-                className={`group relative h-80 rounded-2xl overflow-hidden cursor-pointer transform transition-all duration-700 ease-out ${
-                  isVisible 
-                    ? 'opacity-100 translate-y-0 scale-100' 
-                    : 'opacity-0 translate-y-8 scale-95'
-                }`}
-              >
-                {/* Background Image */}
-                <div 
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                  style={{
-                    backgroundImage: `url(${industry.image})`
-                  }}
-                />
-                
-                {/* Overlay Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent group-hover:from-black/90 transition-all duration-300" />
-                
-                {/* Content */}
-                <div className="absolute inset-0 flex flex-col justify-between p-6">
-                  {/* Logo/Icon */}
-                  <div className="flex justify-center">
-                    <div className="w-16 h-16 bg-workflow-teal rounded-full flex items-center justify-center shadow-lg transform transition-all duration-300 group-hover:scale-110 group-hover:bg-workflow-orange">
-                      <span className="text-white font-bold text-xl">S</span>
-                    </div>
-                  </div>
-                  
-                  {/* Service Name */}
-                  <div className="text-center">
-                    <h3 className="text-white text-xl font-semibold group-hover:text-workflow-orange-light transition-colors duration-300">
-                      {industry.name}
-                    </h3>
-                  </div>
-                </div>
-
-                {/* Hover Border Effect */}
-                <div className="absolute inset-0 border-2 border-transparent group-hover:border-workflow-orange rounded-2xl transition-all duration-300" />
-                
-                {/* Shine Effect */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Bottom decorative element */}
-        <div className="flex justify-center mt-16">
-          <div className="flex space-x-2">
-            {industries.map((_, index) => (
-              <div
-                key={index}
-                className={`h-2 rounded-full transition-all duration-500 ${
-                  visibleCards.length > index 
-                    ? 'w-8 bg-workflow-orange' 
-                    : 'w-2 bg-workflow-line'
-                }`}
-                style={{ transitionDelay: `${index * 100}ms` }}
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                style={{ backgroundImage: `url(${industry.image})` }}
               />
-            ))}
-          </div>
+              
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent group-hover:bg-black/50 transition-all duration-500" />
+              
+              {/* Bottom Title and Hidden Content */}
+              <div className="absolute bottom-6 left-6 right-6 transition-all duration-500 group-hover:-translate-y-[calc(100%+2rem)]">
+                <h3 className="text-white text-xl font-bold text-start">
+                  {industry.name}
+                </h3>
+              </div>
+
+              <div className="absolute bottom-6 left-6 right-6 opacity-0 
+                              transition-all duration-500 delay-75
+                              group-hover:opacity-100">
+                <p className="text-gray-200 text-sm mb-4 text-start leading-relaxed">
+                  {industry.description}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

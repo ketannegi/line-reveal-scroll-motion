@@ -1,163 +1,221 @@
-import { useEffect, useRef, useState } from 'react';
-import { 
-  Camera, 
-  Database, 
-  Brain, 
-  BarChart3, 
-  Settings,
-  Plane,
-  Layers,
-  Cpu,
-  FileText,
-  Wrench
-} from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Plane, Database, Brain, BarChart3, Wrench } from 'lucide-react';
 
-const workflowSteps = [
-  {
-    id: 1,
-    title: "Data Capture",
-    description: "Drones capture high-resolution 3D visual, thermal imagery, IoT sensors track real-time field parameters like temperature, load, vibration.",
-    icon: Plane,
-    position: "right"
-  },
-  {
-    id: 2,
-    title: "Data Validation & Integration", 
-    description: "Automated verification and geo-tagging of drone and sensor data. Synced to ENRZY cloud for processing.",
-    icon: Layers,
-    position: "left"
-  },
-  {
-    id: 3,
-    title: "AI-Enabled Processing",
-    description: "Detects: Vegetation overgrowth • Corrosion or hotspots • Missing or damaged components • Sag and clearance issues Tags.",
-    icon: Cpu,
-    position: "right"
-  },
-  {
-    id: 4,
-    title: "Interactive Reporting",
-    description: "3D dashboards with filters Custom PDF/Excel reports with annotated visuals Asset-wise health scoring and summaries.",
-    icon: BarChart3,
-    position: "left"
-  },
-  {
-    id: 5,
-    title: "Maintenance Ticketing",
-    description: "Auto-ticket generation for every critical issue Task assignment and after-repair image upload by technician Dashboard reflects.",
-    icon: Wrench,
-    position: "right"
-  }
-];
+// Register ScrollTrigger plugin
+gsap.registerPlugin(ScrollTrigger);
 
-export default function WorkflowTimeline() {
-  const [visibleSteps, setVisibleSteps] = useState<number[]>([]);
-  const [timelineProgress, setTimelineProgress] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const timelineRef = useRef<HTMLDivElement>(null);
-  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
+const WorkflowTimeline = () => {
+  const containerRef = useRef(null);
+  const timelineRef = useRef(null);
+  const progressRef = useRef(null);
+
+  const workflowData = [
+    {
+      id: 1,
+      title: "Data Capture",
+      description: "Drones capture high-resolution 3D visual, thermal imagery. IoT sensors track real-time field parameters like temperature, load, vibration",
+      icon: Plane,
+      position: "right"
+    },
+    {
+      id: 2,
+      title: "Data Validation & Integration", 
+      description: "Automated verification and geo-tagging of drone and sensor data. Synced to ENRZY cloud for processing",
+      icon: Database,
+      position: "left"
+    },
+    {
+      id: 3,
+      title: "AI-Enabled Processing",
+      description: "Detects: Vegetation overgrowth o Corrosion or hotspots o Missing or damaged components o Sag and clearance issues Tags",
+      icon: Brain,
+      position: "right"
+    },
+    {
+      id: 4,
+      title: "Interactive Reporting",
+      description: "3D dashboards with filters Custom PDF/Excel reports with annotated visuals Asset-wise health scoring and summaries",
+      icon: BarChart3,
+      position: "left"
+    },
+    {
+      id: 5,
+      title: "Maintenance Ticketing",
+      description: "Auto-ticket generation for every critical issue Task assignment and after-repair image upload by technician Dashboard reflects",
+      icon: Wrench,
+      position: "right"
+    }
+  ];
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const stepId = parseInt(entry.target.getAttribute('data-step-id') || '0');
-          if (entry.isIntersecting) {
-            setVisibleSteps(prev => [...new Set([...prev, stepId])]);
+    const container = containerRef.current;
+    const timeline = timelineRef.current;
+    const progress = progressRef.current;
+
+    if (!container || !timeline || !progress) return;
+
+    let currentStep = 0;
+    const totalSteps = workflowData.length;
+
+    // Set initial progress bar state
+    gsap.set(progress, { scaleY: 0 });
+
+    // Animate each step with meter bar progression
+    workflowData.forEach((step, index) => {
+      const stepElement = container.querySelector(`[data-step="${step.id}"]`);
+      const iconElement = stepElement?.querySelector('.step-icon');
+      const contentElement = stepElement?.querySelector('.step-content');
+      const timelinePoint = stepElement?.querySelector('.timeline-point');
+
+      if (stepElement && iconElement && contentElement && timelinePoint) {
+        // Set initial states
+        gsap.set([iconElement, contentElement], { 
+          opacity: 0,
+          x: step.position === "right" ? 100 : -100,
+          scale: 0.8
+        });
+        
+        gsap.set(timelinePoint, { 
+          scale: 0,
+          backgroundColor: "#e5e7eb"
+        });
+
+        // Create animation timeline for this step
+        const stepTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: stepElement,
+            start: "top 70%",
+            end: "center 50%",
+            toggleActions: "play none none reverse",
+            onEnter: () => {
+              currentStep = Math.max(currentStep, index + 1);
+              // Animate meter bar to current step level
+              gsap.to(progress, {
+                scaleY: currentStep / totalSteps,
+                duration: 0.8,
+                ease: "power2.out"
+              });
+            },
+            onLeaveBack: () => {
+              currentStep = Math.max(0, index);
+              // Animate meter bar back
+              gsap.to(progress, {
+                scaleY: currentStep / totalSteps,
+                duration: 0.8,
+                ease: "power2.out"
+              });
+            }
           }
         });
-      },
-      { 
-        threshold: 0.3,
-        rootMargin: '-100px 0px -100px 0px'
-      }
-    );
 
-    stepRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
+        stepTl
+          .to(timelinePoint, {
+            scale: 1,
+            backgroundColor: "#f97316",
+            duration: 0.5,
+            ease: "back.out(1.7)"
+          })
+          .to([iconElement, contentElement], {
+            opacity: 1,
+            x: 0,
+            scale: 1,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "power2.out"
+          }, "-=0.3");
+
+        // Add hover effects
+        stepElement.addEventListener('mouseenter', () => {
+          gsap.to(iconElement, { scale: 1.1, duration: 0.3 });
+          gsap.to(timelinePoint, { scale: 1.2, duration: 0.3 });
+        });
+
+        stepElement.addEventListener('mouseleave', () => {
+          gsap.to(iconElement, { scale: 1, duration: 0.3 });
+          gsap.to(timelinePoint, { scale: 1, duration: 0.3 });
+        });
+      }
     });
 
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-
-      const rect = containerRef.current.getBoundingClientRect();
-      const containerTop = rect.top;
-      const containerHeight = rect.height;
-      const windowHeight = window.innerHeight;
-
-      // Calculate scroll progress within the container
-      const scrollProgress = Math.max(0, Math.min(1, 
-        (windowHeight - containerTop) / (containerHeight + windowHeight)
-      ));
-
-      setTimelineProgress(scrollProgress);
+    // Cleanup
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
-
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Initial call
-
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const StepIcon = ({ icon: Icon, className }) => (
+    <div className={`w-16 h-16 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white shadow-lg ${className}`}>
+      <Icon size={28} />
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-background py-20">
-      {/* Header */}
-      <div className="text-center mb-16">
-        <p className="text-workflow-gray text-sm uppercase tracking-wider mb-2">How we work</p>
-        <h1 className="text-4xl md:text-5xl font-bold text-foreground">
-          ENRZY Workflow
-        </h1>
-      </div>
-
-      {/* Timeline Container */}
-      <div ref={containerRef} className="relative max-w-6xl mx-auto px-4">
-        {/* Central Timeline Line */}
-        <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-workflow-line transform -translate-x-1/2">
-          <div 
-            ref={timelineRef}
-            className="w-full bg-gradient-to-b from-workflow-orange to-workflow-teal transition-all duration-1000 ease-out"
-            style={{ 
-              height: `${timelineProgress * 100}%`,
-              boxShadow: '0 0 20px hsl(var(--workflow-orange) / 0.5)'
-            }}
-          />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-20">
+      <div className="container mx-auto px-4">
+        {/* Header */}
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-100 rounded-full text-orange-600 text-sm font-medium mb-6">
+            <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+            How we work
+          </div>
+          <h1 className="text-5xl font-bold text-gray-900 mb-4">
+            ENRZY Workflow
+          </h1>
         </div>
 
-        {/* Timeline Steps */}
-        <div className="space-y-32">
-          {workflowSteps.map((step, index) => {
-            const isVisible = visibleSteps.includes(step.id);
-            const Icon = step.icon;
-            
-            return (
+        {/* Workflow Steps */}
+        <div ref={containerRef} className="relative max-w-6xl mx-auto">
+          {/* Central Timeline */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-1 bg-gray-200 rounded-full">
+            <div 
+              ref={timelineRef}
+              className="w-full bg-gradient-to-b from-orange-400 to-orange-600 rounded-full origin-top"
+              style={{ transformOrigin: "top" }}
+            />
+            <div 
+              ref={progressRef}
+              className="absolute top-0 left-0 w-full bg-gradient-to-b from-orange-500 to-orange-700 rounded-full origin-top"
+              style={{ transformOrigin: "top", transform: "scaleY(0)" }}
+            />
+          </div>
+
+          {/* Steps */}
+          <div className="space-y-32">
+            {workflowData.map((step, index) => (
               <div
                 key={step.id}
-                ref={(el) => stepRefs.current[index] = el}
-                data-step-id={step.id}
+                data-step={step.id}
                 className={`relative flex items-center ${
-                  step.position === 'left' ? 'flex-row-reverse' : 'flex-row'
-                }`}
+                  step.position === "right" ? "justify-start" : "justify-end"
+                } cursor-pointer group`}
               >
-                {/* Content Card */}
-                <div 
-                  className={`w-1/2 ${step.position === 'left' ? 'pl-16' : 'pr-16'} ${
-                    isVisible ? 'animate-fade-in-up' : 'opacity-0 translate-y-8'
-                  } transition-all duration-700 delay-300`}
-                >
-                  <div className="bg-card rounded-xl p-8 shadow-card border border-border/50 hover:shadow-icon transition-all duration-300 group">
-                    <div className="flex items-start gap-4">
-                      <div className="bg-workflow-orange-light p-3 rounded-lg group-hover:bg-workflow-orange group-hover:text-white transition-colors duration-300">
-                        <Icon className="w-6 h-6 text-workflow-orange group-hover:text-white" />
+                {/* Timeline Point */}
+                <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
+                  <div className="timeline-point w-6 h-6 bg-gray-300 rounded-full border-4 border-white shadow-lg"></div>
+                </div>
+
+                {/* Content */}
+                <div className={`w-5/12 ${step.position === "right" ? "ml-16" : "mr-16"}`}>
+                  <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 group-hover:shadow-2xl transition-all duration-300">
+                    <div className={`flex items-start gap-6 ${step.position === "left" ? "flex-row-reverse" : ""}`}>
+                      {/* Icon */}
+                      <div className="step-icon flex-shrink-0">
+                        <StepIcon icon={step.icon} />
                       </div>
-                      <div className="flex-1">
-                        <h3 className="text-xl font-semibold text-foreground mb-3">
+
+                      {/* Content */}
+                      <div className="step-content flex-1">
+                        <div className="flex items-center gap-3 mb-4">
+                          <span className="text-lg font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">
+                            Step {step.id}
+                          </span>
+                        </div>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-4">
                           {step.title}
                         </h3>
-                        <p className="text-muted-foreground leading-relaxed">
+                        <p className="text-gray-600 leading-relaxed">
                           {step.description}
                         </p>
                       </div>
@@ -165,60 +223,29 @@ export default function WorkflowTimeline() {
                   </div>
                 </div>
 
-                {/* Center Icon */}
-                <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-                  <div 
-                    className={`w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center shadow-icon border-4 border-background ${
-                      isVisible ? 'animate-icon-bounce' : 'scale-0'
-                    } transition-all duration-500`}
-                    style={{ animationDelay: isVisible ? '200ms' : '0ms' }}
-                  >
-                    <Icon className="w-8 h-8 text-white" />
-                  </div>
-                  
-                  {/* Step Number */}
-                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-workflow-teal text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg">
+                {/* Step Number Badge */}
+                <div className={`absolute top-4 ${step.position === "right" ? "left-4" : "right-4"}`}>
+                  <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
                     {step.id}
                   </div>
                 </div>
-
-                {/* Connecting Line */}
-                <div 
-                  className={`absolute top-1/2 ${
-                    step.position === 'left' ? 'right-1/2 mr-8' : 'left-1/2 ml-8'
-                  } w-8 h-0.5 bg-workflow-line ${
-                    isVisible ? 'animate-timeline-grow' : 'w-0'
-                  } transition-all duration-500`}
-                  style={{ animationDelay: isVisible ? '400ms' : '0ms' }}
-                />
-
-                {/* Step Label */}
-                <div 
-                  className={`absolute ${
-                    step.position === 'left' ? 'right-full mr-24' : 'left-full ml-24'
-                  } top-1/2 transform -translate-y-1/2 ${
-                    isVisible ? 'animate-fade-in-up' : 'opacity-0'
-                  } transition-all duration-500`}
-                  style={{ animationDelay: isVisible ? '600ms' : '0ms' }}
-                >
-                  <div className="bg-workflow-orange text-white px-4 py-2 rounded-lg text-sm font-medium shadow-lg">
-                    Step {step.id}
-                  </div>
-                </div>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
 
-        {/* Bottom Avatar */}
-        <div className="mt-20 flex justify-center">
-          <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center shadow-icon animate-pulse-glow">
-            <div className="w-12 h-12 bg-background rounded-full flex items-center justify-center">
-              <div className="w-8 h-8 bg-workflow-orange rounded-full" />
-            </div>
+        {/* Footer */}
+        <div className="text-center mt-20">
+          <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full font-medium hover:from-orange-600 hover:to-orange-700 transition-all duration-300 cursor-pointer">
+            <span>Start Your Journey</span>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default WorkflowTimeline;
