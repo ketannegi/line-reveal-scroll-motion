@@ -17,7 +17,10 @@
   will-change: filter;
   transition: filter 300ms;
 }
-
+img.aboutsection-img{
+  max-height:500px;
+  object-fit: fill;
+}
 .hero-contact-btn{
   background-color: #F38D26;
   font-size:16px;
@@ -33,7 +36,9 @@
   width:207px;
   height: 44px;
 }
-
+.hero-video-box {
+  transform-origin: center;
+}
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);

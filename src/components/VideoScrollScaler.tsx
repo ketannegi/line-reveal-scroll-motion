@@ -2,97 +2,113 @@ import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// Register the ScrollTrigger plugin with GSAP
+// Register plugin
 gsap.registerPlugin(ScrollTrigger);
 
-// Define the main React component
-const App: React.FC = () => {
-  // Create refs for the DOM elements we need to interact with
-  const videoContainerWrapperRef = useRef<HTMLDivElement>(null);
+const VideoScrollScaler: React.FC = () => {
+  const videoWrapperRef = useRef<HTMLDivElement>(null);
   const videoBoxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Ensure both refs are available before proceeding
-    if (!videoContainerWrapperRef.current || !videoBoxRef.current) {
-      console.warn("Refs not available, animation setup skipped.");
-      return;
-    }
-
+    const videoWrapper = videoWrapperRef.current;
     const videoBox = videoBoxRef.current;
-    const videoContainerWrapper = videoContainerWrapperRef.current;
+    const heroVideoBox = document.getElementById('hero-video-box');
 
-    // Calculate the target dimensions for the video box to fill its wrapper.
-    // These calculations must happen after the component has mounted and rendered,
-    // which is why they are inside useEffect.
-    const wrapperWidth = videoContainerWrapper.offsetWidth;
-    const wrapperHeight = videoContainerWrapper.offsetHeight;
+    if (!videoWrapper || !videoBox || !heroVideoBox) return;
 
-    // Set up the GSAP animation with ScrollTrigger
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: videoContainerWrapper, // The element that triggers the animation
-        start: "top top",              // Animation starts when the top of the trigger hits the top of the viewport
-        end: "bottom top",             // Animation ends when the bottom of the trigger hits the top of the viewport
-        scrub: true,                   // Link animation progress directly to scroll position
-        pin: true,                     // Pin the trigger element in place while the animation runs
-        pinSpacing: true,              // Add spacing to prevent content below from jumping up
-        markers: false,                // Set to true for debugging (shows start/end markers)
-        // Optional: Add a smooth ease for the scrubbing effect if desired
-        // ease: "power1.inOut",
+    const wrapperRect = videoWrapper.getBoundingClientRect();
+    const heroRect = heroVideoBox.getBoundingClientRect();
+
+    // Set initial style
+    gsap.set(videoBox, {
+      width: heroRect.width,
+      height: heroRect.height,
+      x: heroRect.left - (wrapperRect.left + wrapperRect.width / 2 - heroRect.width / 2),
+      y: heroRect.top - (wrapperRect.top + wrapperRect.height / 2 - heroRect.height / 2),
+      borderRadius: "8px",
+      scale: 1,
+      transformOrigin: "center center"
+    });
+
+    // Fade hero box + scale our new one during scroll
+    ScrollTrigger.create({
+      trigger: heroVideoBox.closest('.hero-section') || heroVideoBox,
+      start: "bottom center",
+      end: "bottom top",
+      scrub: true,
+      onUpdate: ({ progress }) => {
+        heroVideoBox.style.opacity = String(1 - progress);
+        gsap.set(videoBox, {
+          scale: 1 + progress * 0.2,
+          transformOrigin: "center center"
+        });
       }
     });
 
-    // Add the animation to the timeline
-    // The videoBox will scale up to fill the wrapper and lose its border-radius
-    tl.to(videoBox, {
-      width: wrapperWidth,
-      height: wrapperHeight,
-      borderRadius: 0,
-      ease: "none", // Use 'none' for direct scrubbing, as scroll provides the "ease"
+    // Transition from small box to full section
+    const mainTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: videoWrapper,
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+        pin: true,
+        pinSpacing: true,
+        onEnter: () => {
+          heroVideoBox.style.opacity = '0';
+        }
+      }
     });
 
-    // Cleanup function: important to destroy ScrollTrigger instances
-    // when the component unmounts to prevent memory leaks and conflicts.
+    mainTl.to(videoBox, {
+      width: wrapperRect.width,
+      height: wrapperRect.height,
+      x: 0,
+      y: 0,
+      scale: 1,
+      borderRadius: 0,
+      transformOrigin: "center center",
+      ease: "none"
+    });
+
     return () => {
-      tl.kill(); // Kills the timeline and its associated ScrollTrigger
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      mainTl.kill();
     };
-  }, []); // Empty dependency array ensures this effect runs only once on mount
+  }, []);
 
   return (
-    <div className="font-inter">
-      
-      
-     
-      <section
-        ref={videoContainerWrapperRef}
-        className="relative flex justify-center items-center min-h-screen  overflow-hidden"
-        style={{ zIndex: 10 }} // Ensure it's above other content if needed
+    <section
+      ref={videoWrapperRef}
+      className="video-scroll-section relative flex justify-center items-center min-h-screen bg-black overflow-hidden"
+      style={{ zIndex: 10 }}
+    >
+      <div
+        ref={videoBoxRef}
+        className="absolute bg-gray-700 shadow-2xl overflow-hidden"
+        style={{
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          transformOrigin: 'center center',
+          borderRadius: '8px'
+        }}
       >
-        {/* Video Box Placeholder - This is the element that will scale */}
-        <div
-          ref={videoBoxRef}
-          className="absolute bg-gray-700 rounded-2xl shadow-2xl overflow-hidden"
-          // Initial dimensions for the video box (adjust as needed)
-          style={{ width: '300px', height: '200px', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
-        >
-          {/* The video element itself */}
-          <video
-            src="./assets/enrzy.mp4" // Example video URL
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover"
-          >
-            Your browser does not support the video tag.
-          </video>
+        <div className="w-full h-full bg-gray-400 flex items-center justify-center">
+          <div className="w-16 h-16 bg-teal-600 rounded-full flex items-center justify-center">
+            <span className="text-white text-2xl font-bold">S</span>
+          </div>
         </div>
-      </section>
-
-   
-     
-    </div>
+        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20">
+          <div className="w-12 h-12 bg-white bg-opacity-90 rounded-full flex items-center justify-center">
+            <svg className="w-6 h-6 text-gray-800 ml-1" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 
-export default App;
+export default VideoScrollScaler;
