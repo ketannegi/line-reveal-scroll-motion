@@ -182,9 +182,9 @@ style={{ marginTop: '0' }}>
             <div ref={imageRef} className="flex justify-center">
               <div className="w-full   bg-gray-300 rounded-2xl shadow-lg overflow-hidden">
                 <div className="w-full  bg-gradient-to-br from-gray-200 to-gray-400 flex items-center justify-center">
-                  <div className="text-gray-600 text-center">
+                  <div className="text-gray-600 text-center w-full">
                     
-                      <img src="./assets/what-enrzy.webp" className='' alt="" style={{width: 'max-content', height:'100%'}} />
+                      <img src="./assets/what-enrzy.webp" className='aboutsection-img' alt="" style={{width: '100%', height:'100%'}} />
                       
                   
                     {/* <p className="text-sm">Image Placeholder</p> */}
