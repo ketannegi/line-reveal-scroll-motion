@@ -91,17 +91,9 @@ const FeaturesSection: React.FC = () => {
   }, []); // Empty dependency array ensures this effect runs only once on mount
 
   return (
-    <section ref={sectionRef} className="py-20  min-h-screen flex items-center  bg-white font-inter">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        {/* <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-            Key Features That Drive Success
-          </h2>
-          <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-            Explore the core functionalities that make our solution stand out.
-          </p>
-        </div> */}
+    <section ref={sectionRef} className="py-20  min-h-screen flex items-center   font-inter">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

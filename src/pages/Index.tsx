@@ -5,10 +5,11 @@ import CounterSection from "@/components/CounterSection";
 import WhyEnrzySection from "@/components/WhyEnrzySection";
 import HeroSection from "@/components/HeroSection";
 import FeaturesSection from "@/components/FeaturesSection";
-import VideoScrollSection from "@/components/VideoScrollSection";
 import VideoScrollScaler from "@/components/VideoScrollScaler";
 import EnrzyAboutSection from "@/components/EnrzyAboutSection";
 import WorkFlowComponent from "@/components/WorkFlowComponent";
+import Footer from "@/components/Footer";
+
 
 import {
   animateHeroSection,
@@ -37,14 +38,13 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <HeroSection className="hero-section" />
       <VideoScrollScaler />
-
       <FeaturesSection />
        <EnrzyAboutSection />
       <CounterSection />
       <WhyEnrzySection />
       <IndustriesSection />
-      {/* <WorkflowTimeline /> */}
       <WorkflowComponent />
+      <Footer />
     </div>
   );
 };

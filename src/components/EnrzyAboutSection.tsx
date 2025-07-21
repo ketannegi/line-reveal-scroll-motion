@@ -122,7 +122,7 @@ const EnrzyAboutSection: React.FC<EnrzyAboutSectionProps> = ({ className = '' })
       ref={sectionRef}
       className={`  min-h-screen  bg-gray-100 py-20 px-4 ${className}`}
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="bg-teal-700 rounded-3xl p-12 shadow-2xl">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Left Content */}

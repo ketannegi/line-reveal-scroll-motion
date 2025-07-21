@@ -7,6 +7,10 @@
 .bg-base{
   background-color: #F38D26 !important ;
 }
+.bg-base-secondary{
+
+  background-color: #155959 !important;
+} 
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -77,25 +81,18 @@ body {
 
 /* ---counter section ----------- */
 .counter-section-bg{
- 
-
-
   background: url('./assets/counterbg.png') no-repeat center center/cover;
-  /* position: relative; */
   height: 400px; 
   color: white;
   
 }
 .counter-section-bg .overlay{
-
   background-color:#155959E5; /* Black with 50% opacity */
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
-  /* justify-content: center; */
   height: 400px; /* adjust as needed */
-
 }
 .counter-grid{
   padding: 120px;
@@ -122,4 +119,38 @@ letter-spacing: 0%;
 }
 .industries-section-card{
   height: 360px !important;
+}
+
+.section-padding{
+  padding-top: 120px;
+  padding-bottom: 120px;
+}
+.section-para{
+  font-size: 16px;
+  font-weight: 500;
+}
+.section-heading{
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.why-image{
+  margin-bottom: 80px;
+}
+.marginBottom-80{
+  margin-bottom:80px;
+}
+.why-card img{
+  width:30px;
+}
+.py-10{
+  padding-top: 40px !important;
+  padding-bottom: 40px !important;
+}
+.pt-40{
+  padding-top: 40px;
+}
+
+footer p{
+  color:black !important;
 }

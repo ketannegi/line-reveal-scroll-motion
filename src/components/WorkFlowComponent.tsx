@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { CheckCircle, Bot, Shield, Lightbulb, BarChart3, Settings } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Transform } from 'stream';
 
 interface WorkflowStep {
   id: number;
@@ -33,19 +34,19 @@ const defaultSteps: WorkflowStep[] = [
     id: 3,
     title: "AI-Enabled Processing",
     description: "Detects: Vegetation overgrowth • Corrosion or hotspots • Missing or damaged components • Sag and clearance issues Tags",
-    icon: "./assets/big-data.png"
+    icon: "./assets/data-ai.png"
   },
   {
     id: 4,
     title: "Interactive Reporting",
     description: "3D dashboards with filters Custom PDF/Excel reports with annotated visuals Asset-wise health scoring and summaries",
-    icon: "./assets/big-data-analytics.png"
+    icon: "./assets/database.png"
   },
   {
     id: 5,
     title: "Maintenance Ticketing",
     description: "Auto-ticket generation for every critical issue Task assignment and after-repair image upload by technician Dashboard reflects",
-    icon: "./assets/big-data-analytics.png"
+    icon: "./assets/bug.png"
   }
 ];
 
@@ -186,7 +187,7 @@ export default function WorkflowComponent({
       if (icon) {
         gsap.set(icon, { 
           scale: 0, 
-          rotation: -180 
+          rotation: 360 
         });
       }
 
@@ -231,7 +232,7 @@ export default function WorkflowComponent({
       if (icon) {
         tl.to(icon, {
           scale: 1,
-          rotation: 0,
+          
           duration: 0.4,
           ease: 'back.out(1.7)'
         }, '-=0.1');
@@ -292,7 +293,7 @@ export default function WorkflowComponent({
           tl.to(description, {
             opacity: 1,
             y: 0,
-            duration: 0.4,
+            duration: .3,
             ease: 'power2.out'
           }, '-=0.3');
         }
@@ -323,7 +324,7 @@ export default function WorkflowComponent({
   }, [steps]);
 
   return (
-    <div ref={containerRef} className="workflow-container py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 min-h-screen">
+    <div ref={containerRef} className="workflow-container section-padding px-4 sm:px-6 lg:px-8 bg-gray-50 min-h-screen">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-16">
@@ -331,7 +332,7 @@ export default function WorkflowComponent({
             <CheckCircle className="w-4 h-4 mr-2" />
             How we work
           </div>
-          <h1 className="header-element text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="header-element text-4xl md:text-4xl font-semibold text-gray-800 mb-4">
             {title}
           </h1>
         </div>
@@ -395,7 +396,7 @@ export default function WorkflowComponent({
                       </div>
                     ) : (
                       <div className="w-5/12 flex items-center justify-end">
-                        <div className="icon-container w-16 h-16 rounded-2xl flex items-center justify-center text-white opacity-1 shadow-xl">
+                        <div className="icon-container w-16 h-16 rounded-2xl flex items-center justify-center text-white opacity-1 " style={{transform:'rotate(0)'}}>
                           <img src={step.icon} alt="" />
                         </div>
                         <div className="text-black text-lg font-semibold px-4 py-2 rounded-full inline-block">
@@ -423,7 +424,7 @@ export default function WorkflowComponent({
                       </div>
                     ) : (
                       <div className="w-5/12 flex gap-3 items-center">
-                        <div className="icon-container w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-xl">
+                        <div className="icon-container w-16 h-16 rounded-2xl flex items-center justify-center text-white ">
                           <img src={step.icon} alt="" className='ml-0' />
                         </div>
                         <div className="text-black text-lg font-semibold px-4 py-2 rounded-full inline-block">
