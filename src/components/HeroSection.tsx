@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import '../App.css'; // Optional: any global styles
+import '../App.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,7 +21,7 @@ const HeroSection = ({ className = '' }: HeroSectionProps) => {
     if (!section || !videoBox || !video) return;
 
     const ctx = gsap.context(() => {
-      // Entrance animation
+      // Entrance animation for hero content
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -35,31 +35,14 @@ const HeroSection = ({ className = '' }: HeroSectionProps) => {
       tl.from(".hero-subtitle", { y: 40, opacity: 0, duration: 0.8 }, ">0.1");
       tl.from(".hero-video-container", { y: 60, opacity: 0, scale: 0.8, duration: 1, ease: 'back.out(1.7)' }, ">0.2");
 
-      // Scroll-triggered video box transformation
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: "+=150%",
-          scrub: true,
-          pin: true,
-          pinSpacing: false,
-          onEnter: () => {
-            if (video.paused) {
-              video.play().catch(() => {}); // handle autoplay issues gracefully
-            }
-          },
-          onLeaveBack: () => {
-            video.pause();
-            video.currentTime = 0;
-          }
-        },
-      }).to(videoBox, {
-        scale: 3,
-        y: 300,
-        ease: "power2.out",
+      // Set initial video box properties
+      gsap.set(videoBox, {
+        width: 280,
+        height: 180,
+        borderRadius: 12,
         transformOrigin: "center center"
       });
+
     }, sectionRef);
 
     return () => ctx.revert();
@@ -68,7 +51,7 @@ const HeroSection = ({ className = '' }: HeroSectionProps) => {
   return (
     <div 
       ref={sectionRef}
-      className={`hero-section bg-background px-6 min-h-screen flex flex-col ${className}`}
+      className={`hero-section bg-background px-6 min-h-screen flex flex-col relative ${className}`}
     >
       <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col">
         {/* Header */}
@@ -83,41 +66,48 @@ const HeroSection = ({ className = '' }: HeroSectionProps) => {
 
         {/* Main Content */}
         <div className="text-center max-w-5xl mx-auto flex-1 flex flex-col justify-center">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">
-            <span className="hero-title-line block">Revolutionize</span>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-8">
+            <span className="hero-title-line block">FROM</span>
             <span className="hero-title-line block text-muted-foreground">
-              Power <span className="text-foreground">PROSPECTS</span>
+              FINDING <span className="text-foreground">PROSPECTS</span>
             </span>
             <span className="hero-title-line block">
-              Asset <span className="text-muted-foreground">Management</span>
+              TO <span className="text-muted-foreground">CONVERTING</span>
             </span>
+            <span className="hero-title-line block">
+              THEM INTO <span className="text-muted-foreground">PAYING</span>
+            </span>
+            <span className="hero-title-line block">CUSTOMERS</span>
           </h1>
 
-          <p className="hero-subtitle text-gray-600 text-lg md:text-xl mt-8 max-w-2xl mx-auto leading-relaxed mb-16">
+          <p className="hero-subtitle text-gray-600 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-16">
             ENRZY empowers utilities to detect faults early, automate maintenance, and visualize every asset in 3D — ensuring higher uptime, lower risk, and smarter decisions.
           </p>
+        </div>
 
-          {/* Video Box Section */}
-          <div className="hero-video-container flex justify-center relative h-[100vh]">
-            <div
-              ref={videoBoxRef}
-              className="hero-video-box absolute w-64 h-40 bg-black rounded-lg overflow-hidden shadow-lg cursor-pointer"
-              id="hero-video-box"
-              style={{
-                top: '80%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                transformOrigin: 'center center',
-                zIndex: 20
-              }}
-            >
-              <video
-                ref={videoRef}
-                src="/assets/sample.mp4"
-                muted
-                playsInline
-                className="w-full h-full object-cover"
-              />
+        {/* Video Box at Bottom */}
+        <div className="hero-video-container flex justify-center items-end pb-12">
+          <div
+            ref={videoBoxRef}
+            className="hero-video-box bg-black rounded-lg overflow-hidden shadow-2xl cursor-pointer relative"
+            id="hero-video-box"
+          >
+            <video
+              ref={videoRef}
+              src="/assets/enrzy.mp4"
+              muted
+              playsInline
+              loop
+              autoPlay
+              className="w-full h-full object-cover"
+            />
+            {/* Play button overlay */}
+            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 hover:bg-opacity-10 transition-all duration-300">
+              <div className="w-12 h-12 bg-white bg-opacity-90 rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-300">
+                <svg className="w-6 h-6 text-gray-800 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
             </div>
           </div>
         </div>

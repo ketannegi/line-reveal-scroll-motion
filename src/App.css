@@ -38,6 +38,27 @@ img.aboutsection-img{
 }
 .hero-video-box {
   transform-origin: center;
+  transition: all 0.3s ease;
+}
+
+.video-scaling-box {
+  transform-origin: center center;
+}
+
+/* Ensure video section has proper stacking */
+.video-scroll-section {
+  position: relative;
+  z-index: 10;
+}
+
+/* Hide scrollbars during video scaling */
+.video-scroll-section::-webkit-scrollbar {
+  display: none;
+}
+
+.video-scroll-section {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 @keyframes logo-spin {
   from {
