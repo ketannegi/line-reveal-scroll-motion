@@ -15,122 +15,83 @@ const VideoScrollScaler: React.FC = () => {
     const video = videoRef.current;
     const heroVideoBox = document.getElementById('hero-video-box');
 
-    if (!videoWrapper || !videoBox || !video || !heroVideoBox) return;
+    if (!videoWrapper || !videoBox || !heroVideoBox || !video) return;
 
     const ctx = gsap.context(() => {
-      // Get viewport dimensions
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
+      const wrapperRect = videoWrapper.getBoundingClientRect();
+      const heroRect = heroVideoBox.getBoundingClientRect();
 
-      // Calculate 80% max size
-      const maxWidth = vw * 0.8;
-      const maxHeight = vh * 0.8;
-
-      // Set initial state - match hero video box position
+      // Set initial style for videoBox - ensure it's positioned absolutely without initial CSS transform: translate
       gsap.set(videoBox, {
-        width: 280,
-        height: 180,
-        borderRadius: 12,
+        width: heroRect.width,
+        height: heroRect.height,
+        x: heroRect.left - wrapperRect.left, // Position relative to wrapper's top-left
+        y: heroRect.top - wrapperRect.top,
+        borderRadius: "8px",
+        scale: 1,
         transformOrigin: "center center",
-        position: "fixed",
-        top: "calc(100vh - 220px)", // Start at bottom of hero
-        left: "50%",
-        x: "-50%",
-        y: 0,
-        zIndex: 50
+        position: 'absolute'
       });
 
-      // Hide hero video when scroll starts
+      // Initially set the background of the videoWrapper to transparent
+      // We will animate it to black during the scroll.
+      gsap.set(videoWrapper, { backgroundColor: 'rgba(0,0,0,0)' }); // Start transparent
+
+      // Fade hero box + scale our new one during scroll
       ScrollTrigger.create({
-        trigger: videoWrapper,
-        start: "top bottom",
-        end: "top 80%",
+        trigger: heroVideoBox.closest('.hero-section') || heroVideoBox,
+        start: "bottom center",
+        end: "bottom top",
         scrub: true,
-        onUpdate: (self) => {
-          const progress = self.progress;
-          if (heroVideoBox) {
-            heroVideoBox.style.opacity = String(1 - progress);
-          }
+        onUpdate: ({ progress }) => {
+          heroVideoBox.style.opacity = String(1 - progress);
+          gsap.set(videoBox, {
+            scale: 1 + progress * 0.2,
+            transformOrigin: "center center"
+          });
+        },
+        onLeave: () => {
+          heroVideoBox.style.opacity = '0';
         }
       });
 
-      // Main scaling and movement animation
-      const scaleTl = gsap.timeline({
+      // Transition from small box to full section
+      const mainTl = gsap.timeline({
         scrollTrigger: {
           trigger: videoWrapper,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1,
+          start: "top top",
+          end: "+=200%", // Adjust this value to control scroll duration of the transition
+          scrub: true,
           pin: true,
           pinSpacing: true,
-          anticipatePin: 1,
-          onUpdate: (self) => {
-            const progress = self.progress;
-            
-            // Start video when reaching 80% scale (around 80% progress)
-            if (progress >= 0.8 && video.paused) {
-              video.play().catch(() => {});
-            } else if (progress < 0.8 && !video.paused) {
-              video.pause();
-            }
-          },
-          onLeave: () => {
-            video.pause();
-          },
-          onEnterBack: () => {
-            // Resume based on progress
-            const progress = ScrollTrigger.getById(scaleTl.scrollTrigger.id)?.progress || 0;
-            if (progress >= 0.8 && video.paused) {
-              video.play().catch(() => {});
-            }
+          onEnter: () => {
+            heroVideoBox.style.opacity = '0';
+            video.play().catch(() => {});
           },
           onLeaveBack: () => {
             video.pause();
+            video.currentTime = 0;
           }
         }
       });
 
-      // Animate movement and scaling
-      scaleTl.to(videoBox, {
-        width: maxWidth,
-        height: maxHeight,
-        top: "50%",
-        y: "-50%",
-        borderRadius: 8,
-        duration: 1,
-        ease: "power2.out"
+      mainTl.to(videoBox, {
+        width: "100%",
+        height: "100%",
+        x: 0,
+        y: 0,
+        scale: 1,
+        borderRadius: 0,
+        ease: "power2.inOut",
+        duration: 1 // Duration for this segment of the scrubbed timeline
       });
 
-      // Handle window resize
-      const handleResize = () => {
-        const newVw = window.innerWidth;
-        const newVh = window.innerHeight;
-        const newMaxWidth = newVw * 0.8;
-        const newMaxHeight = newVh * 0.8;
-        
-        // Update initial position
-        gsap.set(videoBox, {
-          top: "calc(100vh - 220px)"
-        });
-        
-        // Update the animation end values
-        scaleTl.invalidate();
-        scaleTl.to(videoBox, {
-          width: newMaxWidth,
-          height: newMaxHeight,
-          top: "50%",
-          y: "-50%",
-          borderRadius: 8,
-          duration: 1,
-          ease: "power2.out"
-        });
-      };
-
-      window.addEventListener('resize', handleResize);
-
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      };
+      // Animate the background of the videoWrapper from transparent to black
+      mainTl.to(videoWrapper, {
+        backgroundColor: 'rgba(0,0,0,1)', // End black
+        ease: "power1.in", // Smooth in
+        duration: 0.5 // Start fading in slightly later or quicker
+      }, "<0.2"); // Start this background animation slightly after the videoBox starts expanding
 
     }, videoWrapperRef);
 
@@ -140,12 +101,15 @@ const VideoScrollScaler: React.FC = () => {
   return (
     <section
       ref={videoWrapperRef}
-      className="video-scroll-section relative min-h-[300vh] bg-gray-50 overflow-hidden"
-      style={{ zIndex: 10 }}
+      id="video-section-scaler"
+      // REMOVE bg-black from here. GSAP will manage the background color.
+      className="video-scroll-section relative flex justify-center items-center min-h-screen overflow-hidden"
+      style={{ zIndex: 10 }} // Keep zIndex
     >
       <div
         ref={videoBoxRef}
-        className="video-scaling-box bg-gray-900 shadow-2xl overflow-hidden transition-all duration-300"
+        className="absolute shadow-2xl overflow-hidden"
+        // Ensure no transform: translate in initial CSS style here
       >
         <video
           ref={videoRef}
@@ -154,30 +118,7 @@ const VideoScrollScaler: React.FC = () => {
           playsInline
           loop
           className="w-full h-full object-cover"
-          style={{ 
-            filter: 'brightness(1.1) contrast(1.05)',
-          }}
         />
-        
-        {/* Play button overlay - visible when video is paused */}
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 hover:bg-opacity-10 transition-all duration-300 video-overlay">
-          <div className="w-16 h-16 bg-white bg-opacity-90 rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-300">
-            <svg className="w-8 h-8 text-gray-800 ml-1" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8 5v14l11-7z"/>
-            </svg>
-          </div>
-        </div>
-        
-        {/* Subtle overlay for better contrast */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-black/5 pointer-events-none"></div>
-      </div>
-
-      {/* Content overlay when video reaches max size */}
-      <div className="absolute inset-0 flex items-end justify-center pb-20 pointer-events-none">
-        <div className="text-gray-800 text-center opacity-0 transition-opacity duration-1000" id="video-overlay-content">
-          <h2 className="text-2xl md:text-4xl font-bold mb-2">Experience ENRZY</h2>
-          <p className="text-lg md:text-xl">Transforming Power Asset Management</p>
-        </div>
       </div>
     </section>
   );

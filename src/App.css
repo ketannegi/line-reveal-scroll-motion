@@ -4,8 +4,16 @@
   /* padding: 2rem; */
   text-align: center;
 }
+.base-color{
+color: #F38D26 !important ;
+
+
+}
 .bg-base{
   background-color: #F38D26 !important ;
+}
+.border-base{
+  border-color: #F38D26 !important ;
 }
 .bg-base-secondary{
 
@@ -21,6 +29,7 @@ img.aboutsection-img{
   max-height:500px;
   object-fit: fill;
 }
+
 .hero-contact-btn{
   background-color: #F38D26;
   font-size:16px;
@@ -187,7 +196,47 @@ letter-spacing: 0%;
 .pt-40{
   padding-top: 40px;
 }
-
+footer{
+  background-color: #194040 ;
+}
+.footer-logo{
+  width: 100px;
+}
 footer p{
-  color:black !important;
+}
+footer img{
+  width: 20px;
+  height: 20px;
+}
+
+.box-move-top{
+  margin-top: -200px;
+}
+@media only screen and (max-width: 500px) {
+ img.aboutsection-img{
+  max-height:300px;
+  object-fit: fill;
+}
+.hero-logo img{
+  width:150px;
+  height: 44px;
+}
+
+.counter-grid{
+  padding: 24px;
+}
+.counter-text{
+  /* font-family: Onest; */
+font-weight: 500;
+font-style: Medium;
+font-size: 16px;
+
+line-height: 160%;
+letter-spacing: 0%;
+
+}
+.section-padding{
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
 }

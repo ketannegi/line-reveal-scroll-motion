@@ -123,13 +123,13 @@ const EnrzyAboutSection: React.FC<EnrzyAboutSectionProps> = ({ className = '' })
       className={`  min-h-screen  bg-gray-100 py-20 px-4 ${className}`}
     >
       <div className="max-w-6xl mx-auto">
-        <div className="bg-teal-700 rounded-3xl p-12 shadow-2xl">
-          <div className="grid lg:grid-cols-2 gap-12">
+        <div className="bg-teal-700 rounded-3xl p-6 md:p-12 shadow-2xl">
+          <div className="grid lg:grid-cols-2 gap-12 ">
             {/* Left Content */}
-            <div ref={contentRef} className="space-y-8">
+            <div ref={contentRef} className="space-y-8 md:order-first order-last ">
               {/* About Us Badge */}
               <div className="inline-flex w-full items-center space-x-2 rounded-full px-0 py-2">
-                  <div className="header-element inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-orange-100 text-orange-600 mb-4">
+                  <div className="header-element inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-orange-100 base-color mb-4">
             <CheckCircle className="w-4 h-4 mr-2" />
             About Us
           </div>
@@ -149,17 +149,17 @@ style={{ marginTop: '0' }}>
                   ref={(el) => (textRefs.current[0] = el)}
                   className="leading-relaxed transition-colors duration-300"
                 >
-                  <span className="text-orange-400 font-semibold ">Advance analytics software redefining power asset management. From asset maintenance to predictive analytics and supply chain optimization.</span>
+                  <span className="base-color font-semibold ">Advance analytics software redefining power asset management. From asset maintenance to predictive analytics and supply chain optimization.</span>
                 </p>
                 <p
                   ref={(el) => (textRefs.current[1] = el)}
                   className="leading-relaxed transition-colors duration-300"
                 >
-                  <span className="text-orange-400 font-semibold "> ENRZY empowers you to make informed decisions and achieve operational excellence.</span>
+                  <span className="base-color font-semibold "> ENRZY empowers you to make informed decisions and achieve operational excellence.</span>
                 </p>
                 <p
                   ref={(el) => (textRefs.current[2] = el)}
-                  className="leading-relaxed transition-colors duration-300"
+                  className="leading-relaxed  transition-colors duration-300"
                 >
                  ENRZ simplifies asset management with its cloud-based platform, turning raw data into actionable insights. Here’s how:
                 </p>
@@ -167,7 +167,8 @@ style={{ marginTop: '0' }}>
                   ref={(el) => (textRefs.current[3] = el)}
                   className="leading-relaxed transition-colors duration-300 uppercase font-extrabold"
                 >
-                 INTEGRATE, Analyze, Collaborate, Deliver  
+                  
+                 Integrate, Analyze, Collaborate, Deliver
                 </p>
                 {/* <p
                   ref={(el) => (textRefs.current[4] = el)}
