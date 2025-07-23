@@ -212,7 +212,7 @@ export default function WorkflowComponent({
       if (dot) {
         tl.to(dot, {
           scale: 1,
-          backgroundColor: '#14B8A6',
+          backgroundColor: '#155959',
           duration: 0.3,
           ease: 'back.out(1.7)'
         });
@@ -222,7 +222,7 @@ export default function WorkflowComponent({
       if (mobileDot) {
         tl.to(mobileDot, {
           scale: 1,
-          backgroundColor: '#14B8A6',
+          backgroundColor: '#155959',
           duration: 0.3,
           ease: 'back.out(1.7)'
         }, 0);
@@ -328,7 +328,7 @@ export default function WorkflowComponent({
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-16">
-          <div className="header-element inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-orange-100 text-orange-600 mb-4">
+          <div className="header-element inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-orange-100 base-color mb-4">
             <CheckCircle className="w-4 h-4 mr-2" />
             How we work
           </div>
@@ -342,12 +342,12 @@ export default function WorkflowComponent({
           {/* Timeline Line - Desktop */}
           <div 
             ref={timelineRef}
-            className="timeline-line hidden md:block absolute left-1/2 transform -translate-x-px w-1 bg-gray-300 rounded-full" 
+            className="timeline-line hidden md:block absolute left-1/2 transform -translate-x-7px w-1 bg-gray-300 rounded-full" 
             style={{ 
               '--progress': '0%',
               top: '81px',
               height: '86%',
-              background: `linear-gradient(to bottom, #14B8A6 var(--progress), #d1d5db var(--progress))`
+              background: `#155959`
             } as React.CSSProperties}
           />
           
@@ -357,9 +357,9 @@ export default function WorkflowComponent({
             className="timeline-line-mobile md:hidden absolute left-6 w-1 bg-gray-300 rounded-full" 
             style={{ 
               '--progress': '0%',
-              top: '40px', 
-              height: 'calc(100% - 80px)',
-              background: `linear-gradient(to bottom, #14B8A6 var(--progress), #d1d5db var(--progress))`
+              top: '122px', 
+              height: 'calc(100% - 245px)',
+              background: `#155959`
             } as React.CSSProperties}
           />
 
@@ -375,10 +375,10 @@ export default function WorkflowComponent({
                   className="step-container relative flex items-center"
                 >
                   {/* Desktop Timeline Dot */}
-                  <div className="timeline-dot hidden md:block absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-gray-300 rounded-full shadow-lg z-20" style={{translate:'2px'}} />
+                  <div className="timeline-dot hidden md:block absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-gray-300 rounded-full shadow-lg z-20" style={{translate:'3px'}} />
                   
                   {/* Mobile Timeline Dot */}
-                  <div className="mobile-timeline-dot md:hidden absolute left-6 transform -translate-x-1/2 w-4 h-4 bg-gray-300 rounded-full shadow-lg z-20" />
+                  <div className="mobile-timeline-dot md:hidden absolute left-6 transform -translate-x-1/2 w-4 h-4 bg-gray-300 rounded-full shadow-lg z-20"  style={{translate:'2px'}} />
                   
                   {/* Step Content - Desktop Layout */}
                   <div className="hidden md:flex w-full items-center">
@@ -439,7 +439,7 @@ export default function WorkflowComponent({
                     <div className="mobile-step-card w-full">
                       {/* Step Number Badge */}
                       <div className="flex items-center mb-4">
-                        <div className="bg-orange-100 text-orange-600 text-sm font-bold px-3 py-1 rounded-full mr-3">
+                        <div className="bg-orange-100 base-color text-sm font-bold px-3 py-1 rounded-full mr-3">
                           Step {step.id}
                         </div>
                         <div className="icon-container w-12 h-12 rounded-xl flex items-center justify-center shadow-md bg-white">

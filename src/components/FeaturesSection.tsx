@@ -70,7 +70,7 @@ const FeaturesSection: React.FC = () => {
           trigger: sectionRef.current,
           start: "top 80%", // Animation starts when the top of the section hits 80% down the viewport
           end: "bottom 20%", // Animation ends when the bottom of the section hits 20% down the viewport
-          toggleActions: "play reset play reset", // Play on enter, reset on leave (for re-triggering on scroll up)
+          toggleActions: "play none play reverse", // Play on enter, reset on leave (for re-triggering on scroll up)
           markers: false, // Set to true to debug trigger points
         },
       });
@@ -91,7 +91,7 @@ const FeaturesSection: React.FC = () => {
   }, []); // Empty dependency array ensures this effect runs only once on mount
 
   return (
-    <section ref={sectionRef} className="py-20  min-h-screen flex items-center   font-inter">
+    <section ref={sectionRef} className="box-move-top py-0  min-h-screen flex items-center   font-inter">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       
 

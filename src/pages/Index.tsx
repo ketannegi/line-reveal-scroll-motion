@@ -5,45 +5,33 @@ import CounterSection from "@/components/CounterSection";
 import WhyEnrzySection from "@/components/WhyEnrzySection";
 import HeroSection from "@/components/HeroSection";
 import FeaturesSection from "@/components/FeaturesSection";
-import VideoScrollScaler from "@/components/VideoScrollScaler";
+
+
 import EnrzyAboutSection from "@/components/EnrzyAboutSection";
 import WorkFlowComponent from "@/components/WorkFlowComponent";
 import Footer from "@/components/Footer";
+import VideoScrollScaler from "@/components/VideoScrollScaler";
 
 
-import {
-  animateHeroSection,
-  animateFeaturesSection,
-  animateCounterSection,
-  animateWhyEnrzySection,
-  animateIndustriesSection,
-  animateWorkflowTimeline,
-} from "@/animations";
-import WorkflowComponent from "@/components/WorkFlowComponent";
 
 
 const Index = () => {
 
   useEffect(() => {
-    // Initialize animations
-    animateHeroSection();
-    animateFeaturesSection();
-    animateCounterSection();
-    animateWhyEnrzySection();
-    animateIndustriesSection();
-    animateWorkflowTimeline();
+    // Note: Individual components now handle their own animations
+    // No need to call external animations that conflict with component-level GSAP
   }, []);
 
   return (
     <div className="min-h-screen bg-background">
-      <HeroSection className="hero-section" />
-      <VideoScrollScaler />
+      <HeroSection  />
+      {/* <VideoScrollScaler/> */}
       <FeaturesSection />
        <EnrzyAboutSection />
       <CounterSection />
       <WhyEnrzySection />
       <IndustriesSection />
-      <WorkflowComponent />
+      <WorkFlowComponent />
       <Footer />
     </div>
   );

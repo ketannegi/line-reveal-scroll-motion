@@ -30,7 +30,7 @@ const industries = [
     id: 4,
     name: "Mobility",
     image: "./assets/4.jpg",
-    description: "Define safe flight corridors, capture multi-sensor data, condition reports with geo-tagged defect data."
+    description: "Define safe flight corridors, capture multi-sensor, condition reports with geo-tagged defect data."
   },
   {
     id: 5,
@@ -65,7 +65,7 @@ export default function IndustriesSection() {
           trigger: sectionRef.current,
           start: "top 80%",
           end: "bottom 20%",
-          toggleActions: "play reset play reset",
+          toggleActions: "play none play reset",
           markers: false
         }
       });
@@ -73,8 +73,8 @@ export default function IndustriesSection() {
       tl.to(cardsRef.current, {
         y: 0,
         opacity: 1,
-        duration: .5,
-        stagger: 0.2,
+        duration: .8,
+        stagger: 0.3,
          ease: 'power3.out',
       });
 
@@ -87,9 +87,9 @@ export default function IndustriesSection() {
     <section ref={sectionRef} className="section-padding min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4"> 
         <div className="text-center mb-20 ">
-           <div className="header-element inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-orange-100 text-orange-600 mb-4">
+           <div className="header-element inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-orange-100 base-color mb-4">
             <CheckCircle className="w-4 h-4 mr-2" />
-            How we work
+            Who We Work With
           </div>
           <h2 className="text-4xl md:text-4xl font-semibold text-gray-800 mb-4">
             Built For Diverse Industries
@@ -99,35 +99,34 @@ export default function IndustriesSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
           {industries.map((industry, index) => (
-            <div
-              key={industry.id}
-              ref={el => cardsRef.current[index] = el}
-              className="relative h-80 rounded-2xl industries-section-card overflow-hidden cursor-pointer group shadow-lg hover:shadow-2xl transition-all duration-500"
-            >
-              {/* Background Image */}
-              <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                style={{ backgroundImage: `url(${industry.image})` }}
-              />
-              
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent group-hover:bg-black/50 transition-all duration-500" />
-              
-              {/* Bottom Title and Hidden Content */}
-              <div className="absolute bottom-6 left-6 right-6 transition-all duration-500 group-hover:-translate-y-[calc(100%+2rem)]">
-                <h3 className="text-white text-xl font-bold text-start">
-                  {industry.name}
-                </h3>
-              </div>
+           <div
+  key={industry.id}
+  ref={el => cardsRef.current[index] = el}
+  className="relative h-80 rounded-2xl industries-section-card overflow-hidden cursor-pointer group shadow-lg hover:shadow-2xl transition-all duration-500"
+>
+  {/* Background Image */}
+  <div
+    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+    style={{ backgroundImage: `url(${industry.image})` }}
+  />
 
-              <div className="absolute bottom-6 left-6 right-6 opacity-0 
-                              transition-all duration-500 delay-75
-                              group-hover:opacity-100">
-                <p className="text-gray-200 text-sm mb-4 text-start leading-relaxed">
-                  {industry.description}
-                </p>
-              </div>
-            </div>
+  {/* Overlay */}
+  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent group-hover:bg-black/50 transition-all duration-500" />
+
+  {/* Content Container */}
+  <div className="relative z-10 flex flex-col justify-end h-full p-6">
+    {/* Title */}
+    <h3 className="text-white text-xl font-bold text-start mb-2 transition-all duration-500 group-hover:mb-4">
+      {industry.name}
+    </h3>
+
+    {/* Description */}
+    <p className="text-gray-200  text-start text-sm leading-relaxed max-h-0 opacity-0 overflow-hidden transition-all duration-500 group-hover:max-h-40 group-hover:opacity-100">
+      {industry.description}
+    </p>
+  </div>
+</div>
+
           ))}
         </div>
       </div>
